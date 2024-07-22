@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 const cityName = {
   서울: 'Seoul',
@@ -48,13 +48,36 @@ const Weather = () => {
   const getWeatherByCity = () => {
     const englishCity = cityName[city]
     if (city && isKorean(city) && englishCity) {
-      const url = `https://api.openweathermap.org/data/2.5/weather?q=${englishCity}&appid=${apiKey}&units=metric`
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${englishCity}&appid=${apiKey}&units=metric&lang=kr`
       fetchWeather(url)
     } else {
       setError('도시 이름을 한국어로 쳐주세요!')
       setWeatherData(null)
     }
   }
+
+  const onGeoOk = (position) => {
+    const lat = position.coords.latitude
+    const lon = position.coords.longitude
+    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=kr`
+    fetchWeather(url)
+  }
+
+  const onGeoError = () => {
+    setError('위치 정보를 가져오는 데 실패했습니다.')
+  }
+
+  const getWeatherLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(onGeoOk, onGeoError)
+    } else {
+      setError('이 브라우저는 Geolocation을 지원하지 않습니다.')
+    }
+  }
+
+  useEffect(() => {
+    getWeatherLocation()
+  }, [])
 
   return (
     <div>
