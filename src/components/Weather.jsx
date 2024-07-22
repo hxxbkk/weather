@@ -27,34 +27,28 @@ const isKorean = (text) => /^[가-힣]+$/.test(text)
 const Weather = () => {
   const [city, setCity] = useState('')
   const [weatherData, setWeatherData] = useState(null)
-  const [currentLocationWeather, setCurrentLocationWeather] = useState(null)
   const [error, setError] = useState(null)
   const apiKey = import.meta.env.VITE_API_KEY
 
-  const fetchWeather = async (url, isCurrentLocation = false) => {
+  const fetchWeather = async (url) => {
     try {
       const response = await fetch(url)
       if (!response.ok) {
         throw new Error('날씨 정보를 가져오는 데 실패했습니다.')
       }
       const data = await response.json()
-      if (isCurrentLocation) {
-        setCurrentLocationWeather(data)
-      } else {
-        setWeatherData(data)
-      }
+      setWeatherData(data)
       setError(null)
     } catch (error) {
       setError(error.message)
       setWeatherData(null)
-      setCurrentLocationWeather(null)
     }
   }
 
   const getWeatherByCity = () => {
     const englishCity = cityName[city]
     if (city && isKorean(city) && englishCity) {
-      const url = `https://api.openweathermap.org/data/2.5/weather?q=${englishCity}&appid=${apiKey}&units=metric&lang=kr`
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${englishCity}&appid=${apiKey}&units=metric`
       fetchWeather(url)
     } else {
       setError('도시 이름을 한국어로 쳐주세요!')
@@ -65,8 +59,8 @@ const Weather = () => {
   const onGeoOk = (position) => {
     const lat = position.coords.latitude
     const lon = position.coords.longitude
-    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=kr`
-    fetchWeather(url, true)
+    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`
+    fetchWeather(url)
   }
 
   const onGeoError = () => {
@@ -91,8 +85,6 @@ const Weather = () => {
       <input type="text" className="inputText" placeholder="도시 이름을 입력하세요" value={city} onChange={(e) => setCity(e.target.value)} />
       <button onClick={getWeatherByCity}>날씨 조회</button>
       {error && <p style={{ color: 'red' }}>{error}</p>}
-
-      {/* 입력한 도시의 날씨 정보 */}
       {weatherData && (
         <div>
           <h2>{reverseCityName[weatherData.name]}</h2>
