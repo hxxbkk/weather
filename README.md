@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 # weather
 
+=======
+>>>>>>> 65cbcc91385d9ae75c9026845addffa7214b5760
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
