@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import React, { useState, useEffect } from 'react'
-=======
-import React, { useState } from 'react'
->>>>>>> 65cbcc91385d9ae75c9026845addffa7214b5760
 
 const cityName = {
   서울: 'Seoul',
@@ -31,42 +27,34 @@ const isKorean = (text) => /^[가-힣]+$/.test(text)
 const Weather = () => {
   const [city, setCity] = useState('')
   const [weatherData, setWeatherData] = useState(null)
+  const [currentLocationWeather, setCurrentLocationWeather] = useState(null)
   const [error, setError] = useState(null)
   const apiKey = import.meta.env.VITE_API_KEY
 
-  const fetchWeather = async (url) => {
+  const fetchWeather = async (url, isCurrentLocation = false) => {
     try {
       const response = await fetch(url)
       if (!response.ok) {
         throw new Error('날씨 정보를 가져오는 데 실패했습니다.')
       }
       const data = await response.json()
-      setWeatherData(data)
+      if (isCurrentLocation) {
+        setCurrentLocationWeather(data)
+      } else {
+        setWeatherData(data)
+      }
       setError(null)
     } catch (error) {
       setError(error.message)
       setWeatherData(null)
+      setCurrentLocationWeather(null)
     }
   }
 
-<<<<<<< HEAD
   const getWeatherByCity = () => {
     const englishCity = cityName[city]
     if (city && isKorean(city) && englishCity) {
       const url = `https://api.openweathermap.org/data/2.5/weather?q=${englishCity}&appid=${apiKey}&units=metric&lang=kr`
-=======
-  // const fetchWeatherByCity = () => {
-  //   if (city) {
-  //     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`
-  //     fetchWeather(url)
-  //   }
-  // }
-
-  const getWeatherByCity = () => {
-    const englishCity = cityName[city]
-    if (city && isKorean(city) && englishCity) {
-      const url = `https://api.openweathermap.org/data/2.5/weather?q=${englishCity}&appid=${apiKey}&units=metric`
->>>>>>> 65cbcc91385d9ae75c9026845addffa7214b5760
       fetchWeather(url)
     } else {
       setError('도시 이름을 한국어로 쳐주세요!')
@@ -74,12 +62,11 @@ const Weather = () => {
     }
   }
 
-<<<<<<< HEAD
   const onGeoOk = (position) => {
     const lat = position.coords.latitude
     const lon = position.coords.longitude
     const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=kr`
-    fetchWeather(url)
+    fetchWeather(url, true)
   }
 
   const onGeoError = () => {
@@ -102,25 +89,16 @@ const Weather = () => {
     <div>
       <h1>날씨 알려줄🐶</h1>
       <input type="text" className="inputText" placeholder="도시 이름을 입력하세요" value={city} onChange={(e) => setCity(e.target.value)} />
-=======
-  return (
-    <div>
-      <h1>날씨알려주구리</h1>
-      <input type="text" placeholder="도시 이름을 입력하세요" value={city} onChange={(e) => setCity(e.target.value)} />
->>>>>>> 65cbcc91385d9ae75c9026845addffa7214b5760
       <button onClick={getWeatherByCity}>날씨 조회</button>
       {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      {/* 입력한 도시의 날씨 정보 */}
       {weatherData && (
         <div>
           <h2>{reverseCityName[weatherData.name]}</h2>
           <p>온도: {weatherData.main.temp}°C</p>
           <p>날씨: {weatherData.weather[0].description}</p>
-<<<<<<< HEAD
           <p>☁️ : {weatherData.clouds.all}%</p>
-=======
-          <p>바람속도 : {weatherData.wind.speed} miles/hour</p>
-          <p>구름양 : {weatherData.clouds.all}%</p>
->>>>>>> 65cbcc91385d9ae75c9026845addffa7214b5760
           {weatherData.rain && weatherData.rain['1h'] ? <p>1시간 강수량: {weatherData.rain['1h']} mm</p> : <p>한 시간 동안 비가 오지 않았어요</p>}
         </div>
       )}
