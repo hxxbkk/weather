@@ -29,11 +29,11 @@ const Weather = () => {
   const [weatherData, setWeatherData] = useState(null)
   const [error, setError] = useState(null)
   const [history, setHistory] = useState([])
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
   const apiKey = import.meta.env.VITE_API_KEY
 
   const fetchWeather = async (url) => {
-    setLoading(true);
+    setLoading(true)
     try {
       const response = await fetch(url)
       if (!response.ok) {
@@ -86,9 +86,7 @@ const Weather = () => {
   }, [])
 
   const Spinner = () => {
-    return(
-      <div className="spinner"></div>
-    )
+    return <div className="spinner"></div>
   }
 
   return (
@@ -101,9 +99,10 @@ const Weather = () => {
       {weatherData && (
         <div className="card">
           <h2>{reverseCityName[weatherData.name]}</h2>
-          <p>온도: {weatherData.main.temp}°C</p>
+          <img src={`http://openweathermap.org/img/wn/${weatherData.weather[0].icon}.png`} alt="weather icon" />
           <p>날씨: {weatherData.weather[0].description}</p>
-          <p>☁️ : {weatherData.clouds.all}%</p>
+          <p>온도: {weatherData.main.temp}°C</p>
+          <p>구름 양: {weatherData.clouds.all}%</p>
           {weatherData.rain && weatherData.rain['1h'] ? <p>1시간 강수량: {weatherData.rain['1h']} mm</p> : <p>한 시간 동안 비가 오지 않았어요</p>}
           {history.length > 0 && (
             <div>
