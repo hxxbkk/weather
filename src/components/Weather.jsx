@@ -32,6 +32,8 @@ const Weather = () => {
   const [loading, setLoading] = useState(false)
   const apiKey = import.meta.env.VITE_API_KEY
 
+  const [theme, setTheme] = useState('light')
+
   const fetchWeather = async (url) => {
     setLoading(true)
     try {
@@ -89,17 +91,27 @@ const Weather = () => {
     return <div className="spinner"></div>
   }
 
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'))
+  }
+  useEffect(() => {
+    document.body.className = theme
+  }, [theme])
+
   return (
     <div>
       <h1>날씨 알려줄🐶</h1>
+
       <input type="text" className="inputText" placeholder="도시 이름을 입력하세요" value={city} onChange={(e) => setCity(e.target.value)} />
       <button onClick={getWeatherByCity}>날씨 조회</button>
+      <button onClick={toggleTheme}>{theme === 'light' ? '🌙' : '☀️'}</button>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {loading && <Spinner />}
       {weatherData && (
         <div className="card">
           <h2>{reverseCityName[weatherData.name]}</h2>
           <img src={`http://openweathermap.org/img/wn/${weatherData.weather[0].icon}.png`} alt="weather icon" />
+
           <p>날씨: {weatherData.weather[0].description}</p>
           <p>온도: {weatherData.main.temp}°C</p>
           <p>구름 양: {weatherData.clouds.all}%</p>

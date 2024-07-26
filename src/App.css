@@ -47,6 +47,11 @@ button:hover {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+.card.dark {
+  background-color: rgba(50, 50, 50, 0.8);
+  border: 1px solid #444;
+}
+
 .noDot {
   list-style-type: none;
   padding: 0px;
