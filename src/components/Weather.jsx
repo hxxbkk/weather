@@ -142,6 +142,20 @@ const Weather = () => {
             <div>
               <p>미세먼지 농도: {airPollutionData.list[0].components.pm10} µg/m³</p>
               <p>초미세먼지 농도: {airPollutionData.list[0].components.pm2_5} µg/m³</p>
+              <p>
+                대기질 상태:{' '}
+                {airPollutionData.list[0].main.aqi === 1
+                  ? '좋음'
+                  : airPollutionData.list[0].main.aqi === 2
+                    ? '보통'
+                    : airPollutionData.list[0].main.aqi === 3
+                      ? '보통'
+                      : airPollutionData.list[0].main.aqi === 4
+                        ? '나쁨'
+                        : airPollutionData.list[0].main.aqi === 5
+                          ? '매우 나쁨'
+                          : '정보없음'}
+              </p>
             </div>
           )}
           {history.length > 0 && (
