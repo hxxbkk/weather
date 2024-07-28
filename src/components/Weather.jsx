@@ -27,6 +27,7 @@ const isKorean = (text) => /^[가-힣]+$/.test(text)
 const Weather = () => {
   const [city, setCity] = useState('')
   const [weatherData, setWeatherData] = useState(null)
+  const [airPollutionData, setAirpollutionData] = useState(null)
   const [error, setError] = useState(null)
   const [history, setHistory] = useState([])
   const [loading, setLoading] = useState(false)
@@ -44,6 +45,10 @@ const Weather = () => {
       const data = await response.json()
       setWeatherData(data)
       setError(null)
+
+      const { coord } = data
+      const airPollutionData = await fetchAirPolution(coord.lat, coord.lon)
+      setAirpollutionData(airPollutionData)
     } catch (error) {
       setError(error.message)
       setWeatherData(null)
@@ -61,6 +66,22 @@ const Weather = () => {
     } else {
       setError('도시 이름을 한국어로 입력해주세요!')
       setWeatherData(null)
+    }
+  }
+
+  const fetchAirPolution = async (lat, lon) => {
+    const url = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${apiKey}`
+    try {
+      const response = await fetch(url)
+      if (!response.ok) {
+        throw new Error('대기 오염 정보를 가져오는 데 실패했습니다.')
+      }
+      const data = await response.json()
+      console.log(data)
+      return data
+    } catch (error) {
+      console.error(error.message)
+      return null
     }
   }
 
@@ -115,7 +136,14 @@ const Weather = () => {
           <p>날씨: {weatherData.weather[0].description}</p>
           <p>온도: {weatherData.main.temp}°C</p>
           <p>구름 양: {weatherData.clouds.all}%</p>
+          <p>습도 : {weatherData.main.humidity}%</p>
           {weatherData.rain && weatherData.rain['1h'] ? <p>1시간 강수량: {weatherData.rain['1h']} mm</p> : <p>한 시간 동안 비가 오지 않았어요</p>}
+          {airPollutionData && (
+            <div>
+              <p>미세먼지 농도: {airPollutionData.list[0].components.pm10} µg/m³</p>
+              <p>초미세먼지 농도: {airPollutionData.list[0].components.pm2_5} µg/m³</p>
+            </div>
+          )}
           {history.length > 0 && (
             <div>
               <h3>검색기록</h3>
