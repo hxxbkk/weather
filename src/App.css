@@ -15,12 +15,17 @@ input {
   padding: 5px;
   border: 2px solid #646cff;
   border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition:
+    border-color 0.25s,
+    box-shadow 0.25s;
 }
 
 .inputText:focus,
 button:focus {
   outline: none;
   border-color: #ffcc00;
+  box-shadow: 0 0 0px rgba(255, 204, 0, 0.5);
 }
 
 button {
@@ -39,6 +44,50 @@ button:hover {
   border-color: #646cff;
 }
 
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.weather-info {
+  flex: 1;
+  padding: 20px;
+  width: 100%;
+}
+
+.history {
+  width: 100%;
+  max-width: 300px;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  transition: transform 0.3s;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.history:hover {
+  transform: translateY(-3px);
+}
+
+.history h3 {
+  margin-bottom: 10px;
+}
+
+.history li {
+  padding: 8px;
+  margin: 5px 0;
+  border-radius: 5px;
+  background-color: #e0f7fa;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.history li:hover {
+  background-color: #b2ebf2;
+}
+
 .card {
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -47,11 +96,86 @@ button:hover {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+.weather-card {
+  background-color: rgba(173, 216, 230, 0.8);
+}
+
+.air-card {
+  position: relative;
+  width: 350px;
+  height: 125px;
+  background: #fff;
+  border-radius: 80px;
+  margin: 100px auto 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: float 3s ease-in-out infinite;
+  padding: 20px;
+  border: solid 1px #fff;
+}
+
+.air-card:before,
+.air-card:after {
+  content: '';
+  position: absolute;
+  background: #fff;
+  border: 5px solid #fff;
+  border-radius: 50%;
+}
+
+.air-card:before {
+  width: 160px;
+  height: 160px;
+  top: -75px;
+  left: 30px;
+}
+
+.air-card:after {
+  width: 90px;
+  height: 90px;
+  top: -50px;
+  left: 180px;
+}
+
+.air-card p {
+  position: relative;
+  z-index: 1;
+}
+
+.air-card.dark:before,
+.air-card.dark:after {
+  border-color: rgb(70, 70, 70);
+  background: rgb(70, 70, 70);
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
 .card.dark {
-  background-color: rgba(50, 50, 50, 0.8);
+  background-color: rgb(50, 50, 50, 0.8);
   border: 1px solid #444;
 }
 
+.weather-card.dark {
+  background-color: rgba(70, 70, 70, 0.8);
+  color: white;
+  border: solid 1px rgba(70, 70, 70, 0.8);
+  box-shadow: none;
+}
+
+.air-card.dark {
+  background-color: rgb(70, 70, 70);
+  color: white;
+  border: solid 1px rgb(70, 70, 70);
+}
 .noDot {
   list-style-type: none;
   padding: 0px;
@@ -79,3 +203,4 @@ button:hover {
     transform: rotate(360deg);
   }
 }
+

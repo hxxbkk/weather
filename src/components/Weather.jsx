@@ -31,6 +31,7 @@ const Weather = () => {
   const [error, setError] = useState(null)
   const [history, setHistory] = useState([])
   const [loading, setLoading] = useState(false)
+  const [showHistory, setShowHistory] = useState(false)
   const apiKey = import.meta.env.VITE_API_KEY
 
   const [theme, setTheme] = useState('light')
@@ -40,7 +41,7 @@ const Weather = () => {
     try {
       const response = await fetch(url)
       if (!response.ok) {
-        throw new Error('날씨 정보를 가져오는 데 실패했습니다.')
+        throw new Error('날씨 정보를 가져오는 데 실패했어요.')
       }
       const data = await response.json()
       setWeatherData(data)
@@ -64,7 +65,7 @@ const Weather = () => {
       fetchWeather(url)
       setHistory((prev) => [...prev, city]) //검색 기록
     } else {
-      setError('도시 이름을 한국어로 입력해주세요!')
+      setError('올바른 이름을 입력해주세요!')
       setWeatherData(null)
     }
   }
@@ -74,7 +75,7 @@ const Weather = () => {
     try {
       const response = await fetch(url)
       if (!response.ok) {
-        throw new Error('대기 오염 정보를 가져오는 데 실패했습니다.')
+        throw new Error('대기 오염 정보를 가져오는 데 실패했어요.')
       }
       const data = await response.json()
       console.log(data)
@@ -120,58 +121,63 @@ const Weather = () => {
   }, [theme])
 
   return (
-    <div>
-      <h1>날씨 알려줄🐶</h1>
+    <div className="container">
+      <div className="weather-info">
+        <h1>날씨 알려줄🐶</h1>
 
-      <input type="text" className="inputText" placeholder="도시 이름을 입력하세요" value={city} onChange={(e) => setCity(e.target.value)} />
-      <button onClick={getWeatherByCity}>날씨 조회</button>
-      <button onClick={toggleTheme}>{theme === 'light' ? '🌙' : '☀️'}</button>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {loading && <Spinner />}
-      {weatherData && (
-        <div className="card">
-          <h2>{reverseCityName[weatherData.name]}</h2>
-          <img src={`http://openweathermap.org/img/wn/${weatherData.weather[0].icon}.png`} alt="weather icon" />
-
-          <p>날씨: {weatherData.weather[0].description}</p>
-          <p>온도: {weatherData.main.temp}°C</p>
-          <p>구름 양: {weatherData.clouds.all}%</p>
-          <p>습도 : {weatherData.main.humidity}%</p>
-          {weatherData.rain && weatherData.rain['1h'] ? <p>1시간 강수량: {weatherData.rain['1h']} mm</p> : <p>한 시간 동안 비가 오지 않았어요</p>}
-          {airPollutionData && (
-            <div>
-              <p>미세먼지 농도: {airPollutionData.list[0].components.pm10} µg/m³</p>
-              <p>초미세먼지 농도: {airPollutionData.list[0].components.pm2_5} µg/m³</p>
-              <p>
-                대기질 상태:{' '}
-                {airPollutionData.list[0].main.aqi === 1
-                  ? '좋음'
-                  : airPollutionData.list[0].main.aqi === 2
-                    ? '보통'
-                    : airPollutionData.list[0].main.aqi === 3
+        <input type="text" className="inputText" placeholder="도시 이름을 입력하세요" value={city} onChange={(e) => setCity(e.target.value)} />
+        <button onClick={getWeatherByCity}>날씨 조회</button>
+        <button onClick={toggleTheme}>{theme === 'light' ? '🌙' : '☀️'}</button>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {loading && <Spinner />}
+        {weatherData && (
+          <div className={`card weather-card ${theme}`}>
+            <h2>{reverseCityName[weatherData.name]}</h2>
+            <img src={`http://openweathermap.org/img/wn/${weatherData.weather[0].icon}.png`} alt="weather icon" />
+            <p>날씨: {weatherData.weather[0].description}</p>
+            <p>온도: {weatherData.main.temp}°C</p>
+            <p>구름 양: {weatherData.clouds.all}%</p>
+            <p>습도 : {weatherData.main.humidity}%</p>
+            {weatherData.rain && weatherData.rain['1h'] ? <p>1시간 강수량: {weatherData.rain['1h']} mm</p> : <p>한 시간 동안 비가 오지 않았어요</p>}
+            {airPollutionData && (
+              <div className={`card air-card ${theme}`}>
+                <p>미세먼지 농도: {airPollutionData.list[0].components.pm10} µg/m³</p>
+                <p>초미세먼지 농도: {airPollutionData.list[0].components.pm2_5} µg/m³</p>
+                <p>
+                  대기질 상태:{' '}
+                  {airPollutionData.list[0].main.aqi === 1
+                    ? '좋음'
+                    : airPollutionData.list[0].main.aqi === 2
                       ? '보통'
-                      : airPollutionData.list[0].main.aqi === 4
-                        ? '나쁨'
-                        : airPollutionData.list[0].main.aqi === 5
-                          ? '매우 나쁨'
-                          : '정보없음'}
-              </p>
-            </div>
-          )}
-          {history.length > 0 && (
-            <div>
-              <h3>검색기록</h3>
-              <ul className="noDot">
-                {history.map((historyCity, index) => (
-                  <li key={index} onClick={() => setCity(historyCity)}>
-                    {historyCity}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-      )}
+                      : airPollutionData.list[0].main.aqi === 3
+                        ? '보통'
+                        : airPollutionData.list[0].main.aqi === 4
+                          ? '나쁨'
+                          : airPollutionData.list[0].main.aqi === 5
+                            ? '매우 나쁨'
+                            : '정보없음'}
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      <div className="history">
+        <button onClick={() => setShowHistory(!showHistory)}>{showHistory ? '검색기록 숨기기' : '검색기록 보기'}</button>
+        {showHistory && history.length > 0 && (
+          <div>
+            <h3>검색기록</h3>
+            <ul className="noDot">
+              {history.map((historyCity, index) => (
+                <li key={index} onClick={() => setCity(historyCity)}>
+                  {historyCity}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

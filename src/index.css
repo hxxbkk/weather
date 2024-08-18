@@ -82,6 +82,5 @@ body.ligth {
 
 body.dark {
   background-color: black;
-  color: white;
+  color: rgb(70, 70, 70);
 }
-
