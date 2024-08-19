@@ -71,7 +71,7 @@ const Weather = () => {
   }
 
   const fetchAirPolution = async (lat, lon) => {
-    const url = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${apiKey}`
+    const url = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${apiKey}`
     try {
       const response = await fetch(url)
       if (!response.ok) {
@@ -105,20 +105,30 @@ const Weather = () => {
     }
   }
 
-  useEffect(() => {
-    getWeatherLocation()
-  }, [])
-
   const Spinner = () => {
     return <div className="spinner"></div>
   }
 
   const toggleTheme = () => {
-    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'))
+    setTheme((prevTheme) => (prevTheme === 'dark' ? 'light' : 'dark'))
+    const isDarkMode = document.body.classList.toggle('dark')
+    const buttons = document.querySelectorAll('button')
+    buttons.forEach((button) => {
+      if (isDarkMode) {
+        button.classList.add('dark')
+      } else {
+        button.classList.remove('dark')
+      }
+    })
+    const historyItems = document.querySelectorAll('.history li')
+    historyItems.forEach((item) => {
+      if (isDarkMode) {
+        item.classList.add('dark')
+      } else {
+        item.classList.remove('dark')
+      }
+    })
   }
-  useEffect(() => {
-    document.body.className = theme
-  }, [theme])
 
   return (
     <div className="container">
@@ -127,13 +137,14 @@ const Weather = () => {
 
         <input type="text" className="inputText" placeholder="도시 이름을 입력하세요" value={city} onChange={(e) => setCity(e.target.value)} />
         <button onClick={getWeatherByCity}>날씨 조회</button>
+        <button onClick={getWeatherLocation}>내 위치 날씨 조회</button>
         <button onClick={toggleTheme}>{theme === 'light' ? '🌙' : '☀️'}</button>
         {error && <p style={{ color: 'red' }}>{error}</p>}
         {loading && <Spinner />}
         {weatherData && (
           <div className={`card weather-card ${theme}`}>
             <h2>{reverseCityName[weatherData.name]}</h2>
-            <img src={`http://openweathermap.org/img/wn/${weatherData.weather[0].icon}.png`} alt="weather icon" />
+            <img src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}.png`} alt="weather icon" />
             <p>날씨: {weatherData.weather[0].description}</p>
             <p>온도: {weatherData.main.temp}°C</p>
             <p>구름 양: {weatherData.clouds.all}%</p>
@@ -163,7 +174,7 @@ const Weather = () => {
         )}
       </div>
 
-      <div className="history">
+      <div className={`history ${theme}`}>
         <button onClick={() => setShowHistory(!showHistory)}>{showHistory ? '검색기록 숨기기' : '검색기록 보기'}</button>
         {showHistory && history.length > 0 && (
           <div>

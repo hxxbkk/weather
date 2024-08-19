@@ -44,6 +44,16 @@ button:hover {
   border-color: #646cff;
 }
 
+button.dark {
+  background-color: #444;
+  color: white;
+  border: 1px solid #646cff;
+}
+
+button.dark:hover {
+  border-color: #ffcc00;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -67,6 +77,11 @@ button:hover {
   text-align: center;
 }
 
+.history.dark {
+  background-color: rgb(60, 60, 60);
+  color: white;
+}
+
 .history:hover {
   transform: translateY(-3px);
 }
@@ -84,8 +99,17 @@ button:hover {
   transition: background-color 0.3s;
 }
 
+.history li.dark {
+  background-color: rgb(70, 70, 70);
+  color: white;
+}
+
 .history li:hover {
   background-color: #b2ebf2;
+}
+
+.history li.dark:hover {
+  background-color: rgb(90, 90, 90);
 }
 
 .card {
@@ -203,4 +227,3 @@ button:hover {
     transform: rotate(360deg);
   }
 }
-
