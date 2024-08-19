@@ -111,24 +111,21 @@ const Weather = () => {
 
   const toggleTheme = () => {
     setTheme((prevTheme) => (prevTheme === 'dark' ? 'light' : 'dark'))
-    const isDarkMode = document.body.classList.toggle('dark')
+  }
+
+  useEffect(() => {
+    const isDarkMode = theme === 'dark'
+    document.body.classList.toggle('dark', isDarkMode)
+
     const buttons = document.querySelectorAll('button')
     buttons.forEach((button) => {
-      if (isDarkMode) {
-        button.classList.add('dark')
-      } else {
-        button.classList.remove('dark')
-      }
+      button.classList.toggle('dark', isDarkMode)
     })
     const historyItems = document.querySelectorAll('.history li')
     historyItems.forEach((item) => {
-      if (isDarkMode) {
-        item.classList.add('dark')
-      } else {
-        item.classList.remove('dark')
-      }
+      item.classList.toggle('dark', isDarkMode)
     })
-  }
+  }, [theme, history])
 
   return (
     <div className="container">
