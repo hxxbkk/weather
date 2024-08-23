@@ -8,4 +8,4 @@
 ### 🛠사용 기술 및 라이브러리
 HTML, CSS, Javascript, React
 
-실행방법 : npm run dev
+### 실행방법 : npm run dev
